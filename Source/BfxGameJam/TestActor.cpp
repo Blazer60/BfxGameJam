@@ -17,7 +17,6 @@ ATestActor::ATestActor()
 void ATestActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
