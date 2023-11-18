@@ -62,7 +62,8 @@ void URewindComponent::FinishRewindThroughPath(const float Delta)
 	
 	GetOwner()->SetActorLocation(FMath::Lerp(PositionA, PositionB, Alpha));
 	const auto CharacterMovementComponent = GetOwner()->GetComponentByClass<UCharacterMovementComponent>();
-	CharacterMovementComponent->Velocity = FMath::Lerp(VelocityA, VelocityB, Alpha);
+	const auto Forward = GetOwner()->GetActorForwardVector();
+	CharacterMovementComponent->Velocity = Forward * FMath::Lerp(VelocityA, VelocityB, Alpha).Length();
 	
 	const int32 Count = RewindData.Num() - Index;
 	RewindData.RemoveAt(Index, Count);
