@@ -29,12 +29,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float UpdateRate { 0.1f };
+	
+	TArray<FRewindData> RewindData;
 protected:
 	virtual void BeginPlay() override;
 	void TrackPath(const float DeltaTime);
 
-	TArray<FRewindData> RewindData;
 	int32 MaximumCount { 1000 };
 	float Timer { 0.f };
 
+	float GlobalTimer { 0.f };
 };
