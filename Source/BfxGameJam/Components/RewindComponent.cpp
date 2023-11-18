@@ -19,6 +19,7 @@ void URewindComponent::BeginPlay()
 
 void URewindComponent::TrackPath(const float DeltaTime)
 {
+	GlobalTimer += DeltaTime;
 	Timer += DeltaTime;
 	if (Timer > UpdateRate)
 	{
@@ -27,7 +28,7 @@ void URewindComponent::TrackPath(const float DeltaTime)
 		const FVector Location = Owner->GetActorLocation();
 		const FVector Velocity = Owner->GetVelocity();
 
-		RewindData.Emplace(FRewindData { Location, Velocity });
+		RewindData.Emplace(FRewindData { Location, Velocity, GlobalTimer });
 
 		if (RewindData.Num() > MaximumCount)
 			RewindData.RemoveAt(0);
@@ -57,8 +58,8 @@ void URewindComponent::FinishRewindThroughPath(const float Delta)
 {
 	const int32 Index = FMath::Max(RewindData.Num() - ceil(Delta / UpdateRate), 0);
 	const float Alpha = (Delta / UpdateRate) - floor(Delta / UpdateRate);
-	const auto [PositionA, VelocityA] = RewindData[Index];
-	const auto [PositionB, VelocityB] = RewindData[FMath::Max(Index - 1, 0)];
+	const auto [PositionA, VelocityA, TimeStampA] = RewindData[Index];
+	const auto [PositionB, VelocityB, TimeStampB] = RewindData[FMath::Max(Index - 1, 0)];
 	
 	GetOwner()->SetActorLocation(FMath::Lerp(PositionA, PositionB, Alpha));
 	const auto CharacterMovementComponent = GetOwner()->GetComponentByClass<UCharacterMovementComponent>();
